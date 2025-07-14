@@ -1,0 +1,43 @@
+const express = require('express');
+const router = express.Router();
+const {Note} = require('../model');
+
+router.get('/', async(req,res)=>{
+    console.log(req.body);
+    const data = await Note.find();
+    res.status(200).json(data);
+    console.log(data);
+})
+
+router.post('/',async(req,res)=>{
+    const {heading, message} = req.body;
+    const note = new Note({ heading: heading, message: message});
+    const save = await note.save();
+    res.status(201).json(note);
+    console.log(req.body);
+})
+router.delete('/', async(req,res)=>{
+    const {_id} = req.body;
+    const note = await Note.findByIdAndDelete(_id);
+    console.log(_id)
+    if(!note){
+        console.error("Not found");
+    }
+    res.status(200).json(_id);
+})
+
+
+router.put('/', async (req, res) => {
+    const { _id, heading, message } = req.body;
+    console.log("Received PUT:", { _id, heading, message });
+
+    const note = await Note.findByIdAndUpdate(_id, {heading, message}, {new : true});
+    if (!note) {
+        console.log("Note not found with ID:", _id);
+        return res.status(404).json({ message: "Note not found" });
+    }
+    await note.save();
+    res.status(200).json(note);
+});
+
+module.exports=router;
