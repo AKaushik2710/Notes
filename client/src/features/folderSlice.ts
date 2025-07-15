@@ -1,29 +1,47 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 // import Folders from "../pages/folders";
-import { fetchFolders, addFolders } from "../api/fetchFolders";
+import type { Note } from "../features/noteSlice";
+import { fetchFolders, addFolders, showFolder } from "../api/fetchFolders";
 export interface Folders{
     _id? : string,
     folderName : string,
-    notes : string[] | undefined
+    notes : string[] | undefined,
 }
 
-const initialState : Folders[] = [];
+interface populatedFolders {
+    _id? : string,
+    folderName : string,
+    notes : Note[] | undefined
+}
+interface FolderState {
+    folders :Folders[],
+    currentFolder? : populatedFolders
+}
+
+
+const initialState : FolderState = {
+    folders : [],
+    currentFolder : undefined
+}
 
 const folderSlice = createSlice({
     name : "folders",
     initialState,
     reducers : {
         removeFolder : (state, action : PayloadAction<string>)=>{
-            return state.filter(folder => folder._id !== action.payload);
+            state.folders = state.folders.filter(folder => folder._id !== action.payload);
         }
     },
     extraReducers : (builder) =>{
         builder
             .addCase(fetchFolders.fulfilled, (state, action : PayloadAction<Folders[]>) =>{
-                return action.payload;
+                state.folders = action.payload;
             })
             .addCase(addFolders.fulfilled, (state, action : PayloadAction<Folders>)=>{
-                state.push(action.payload);
+                state.folders.push(action.payload);
+            })
+            .addCase(showFolder.fulfilled, (state, action : PayloadAction<Folders>)=>{
+                state.currentFolder = action.payload;
             })
     }
 })

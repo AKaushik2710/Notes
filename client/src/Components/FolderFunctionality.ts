@@ -1,18 +1,35 @@
 import { useEffect, useRef, useState } from "react";
 import type { Folders } from "../features/folderSlice";
+import type { Note } from "../features/notesSlice";
 
 export default function useFolders(){
     const [change, setChange] = useState<boolean>(false);
     const folderRef = useRef<HTMLInputElement>(null);
     const [writer, setWriter] = useState<boolean>(false);
+    const [noteViewer, setNoteViewer] = useState<boolean>(false);
     const [changeFolder, setChangeFolder] = useState<Folders>();
+    const [folderNoteView, setFolderNoteView] = useState<Note>();
     useEffect(()=>{
         if(folderRef.current){
         folderRef.current.value = changeFolder.folderName;
         }
         // console.log(changeFolder);
     }, [changeFolder]);
-    function handleToggle(id, setter){
+    function handleNoteView(value : boolean){
+        setNoteViewer(value);
+        handleWriter(true);
+    }
+    function handleFolderNoteView(note : Note){
+        handleNoteView(true);
+        handleWriter(false);
+        setFolderNoteView(note);
+    }
+    // function handleFolderNoteView({note, viewValue, writerValue} : { note : Note, viewValue : boolean, writerValue : boolean}){
+    //     handleNoteView(true);
+    //     handleWriter(false);
+    //     setFolderNoteView(note);
+    // }
+    function handleToggle(id : string, setter : React.Dispatch<React.SetStateAction<any[]>>){
         setter(prev => {
             console.log(prev);
             return prev.map(note => {
@@ -24,12 +41,11 @@ export default function useFolders(){
             })
         })
     }
-    function handleChange(folder){
+    function handleChangeFolder(value : boolean){
         setChange(true);
-        setChangeFolder(folder);
     }
     function handleWriter(value : boolean){
         setWriter(value);
     }
-    return {folderRef, change, handleChange, changeFolder, handleToggle, handleWriter, writer}
+    return {folderRef, handleToggle, folderNoteView, handleFolderNoteView, change, setChange, changeFolder, handleChangeFolder, writer, handleWriter, noteViewer, handleNoteView};
 }

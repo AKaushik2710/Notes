@@ -11,6 +11,7 @@ router.get('/', async(req,res)=>{
 // For Adding a New Folder
 router.post('/', async(req,res)=>{
     const {folderName, notes} = req.body;
+    console.log(folderName, notes);
     const folder = new Folder({ folderName : folderName, notes : notes});
     const save =  await folder.save();
     res.status(201).json(folder);
@@ -22,5 +23,15 @@ router.put('/', async(req,res)=>{
     const folder = Folder.findByIdAndUpdate(_id,{folderName, notes}, {new : true});
     await folder.save();
     res.status(200).json(folder);
+})
+
+router.get('/:id', async(req,res)=>{
+    const {id} = req.params;
+    const folder =  await Folder.findById(id).populate('notes');
+    if(!folder){
+        return res.status(404).json({message : "Folder Not Found"});
+    }
+    res.status(200).json(folder);
+    console.log("Folder found", folder);
 })
 module.exports = router;

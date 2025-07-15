@@ -34,3 +34,17 @@ export const addFolders = createAsyncThunk(
         }
     }
 )
+
+export const showFolder = createAsyncThunk(
+    'folders/showFolder',
+    async(id : string, thunkAPI)=>{
+        try{
+            const response = await fetch(`${import.meta.env.VITE_APP_FOLDERS}/${id}`);
+            const data = await response.json();
+            return data;
+        }
+        catch(err){
+            return thunkAPI.rejectWithValue("Sprry");
+        }
+    }
+)

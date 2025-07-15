@@ -1,37 +1,34 @@
+import { useAppDispatch, useAppSelector } from "../redux/hook";
 import {Button, Span, Div, Input} from "./Assembler";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {useEffect, useRef} from "react";
+import type { Note } from "../features/notesSlice";
 import {faCircleCheck} from "@fortawesome/free-solid-svg-icons";
-import { addNotes, changeNotes } from "../api/fetchNotes";
-import { useAppDispatch} from "../redux/hook";
+import { changeNotes } from "../api/fetchNotes";
 
-export default function Writer({headingRef, messageRef, change, setChange, idRef, setWriter, setIsMobile} : {
-    headingRef: React.RefObject<HTMLInputElement>,
-    messageRef: React.RefObject<HTMLTextAreaElement>,
-    change: boolean,
-    setChange: React.Dispatch<React.SetStateAction<boolean>>,
-    idRef: React.RefObject<string>,
-    setWriter : React.Dispatch<React.SetStateAction<boolean>>,
-    setIsMobile : React.Dispatch<React.SetStateAction<boolean>>
-}) {
+export default function FolderNoteWriter({note, handleNoteView} : {note :Note, handleNoteView : (value : boolean) => void}) {
     // const {headingRef, messageRef, change, setChange, idRef} = useNotes();
     const dispatch = useAppDispatch();
+    const headingRef = useRef<HTMLInputElement>(null);
+    const messageRef = useRef<HTMLTextAreaElement>(null);
+    console.log(note);
+    useEffect(()=>{
+        if(headingRef.current)headingRef.current.value = note.heading;
+    if(messageRef.current)messageRef.current.value = note.message;
+    },[])
+    
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    setWriter(false);
-    setIsMobile(false);
+    
     const newNote = {
         heading: headingRef.current ? headingRef.current.value : "",
         message: messageRef.current ? messageRef.current.value : ""
     };
-    if(!change){
-        dispatch(addNotes(newNote));
-    }
-    else{
-        setChange(false);
-        dispatch(changeNotes({_id : idRef.current, heading : headingRef.current ? headingRef.current.value : "", message : messageRef.current ? messageRef.current.value : ""}));
-    }
+
+    dispatch(changeNotes({_id : note._id, heading : headingRef.current ? headingRef.current.value : "", message : messageRef.current ? messageRef.current.value : ""}));
     if (headingRef.current) headingRef.current.value = "";
     if (messageRef.current) messageRef.current.value = "";
+    handleNoteView(false);
 }
 
     return <form className="flex flex-col w-full md:w-3/5 border-1 border-teal-200 h-full" onSubmit={handleSubmit}>

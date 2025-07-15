@@ -6,7 +6,6 @@ router.get('/', async(req,res)=>{
     console.log(req.body);
     const data = await Note.find();
     res.status(200).json(data);
-    console.log(data);
 })
 
 router.post('/',async(req,res)=>{
@@ -14,7 +13,6 @@ router.post('/',async(req,res)=>{
     const note = new Note({ heading: heading, message: message});
     const save = await note.save();
     res.status(201).json(note);
-    console.log(req.body);
 })
 router.delete('/', async(req,res)=>{
     const {_id} = req.body;
