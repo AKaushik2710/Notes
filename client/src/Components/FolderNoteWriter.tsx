@@ -5,8 +5,9 @@ import {useEffect, useRef} from "react";
 import type { Note } from "../features/notesSlice";
 import {faCircleCheck} from "@fortawesome/free-solid-svg-icons";
 import { changeNotes } from "../api/fetchNotes";
+import { showFolder } from "../api/fetchFolders";
 
-export default function FolderNoteWriter({note, handleNoteView} : {note :Note, handleNoteView : (value : boolean) => void}) {
+export default function FolderNoteWriter({note, handleNoteView, handleChange, folderID} : {note :Note, handleNoteView : (value : boolean) => void, handleChange : (folder : string) => void, folderID : string}) {
     // const {headingRef, messageRef, change, setChange, idRef} = useNotes();
     const dispatch = useAppDispatch();
     const headingRef = useRef<HTMLInputElement>(null);
@@ -24,7 +25,7 @@ export default function FolderNoteWriter({note, handleNoteView} : {note :Note, h
         heading: headingRef.current ? headingRef.current.value : "",
         message: messageRef.current ? messageRef.current.value : ""
     };
-
+    dispatch(showFolder(folderID));
     dispatch(changeNotes({_id : note._id, heading : headingRef.current ? headingRef.current.value : "", message : messageRef.current ? messageRef.current.value : ""}));
     if (headingRef.current) headingRef.current.value = "";
     if (messageRef.current) messageRef.current.value = "";

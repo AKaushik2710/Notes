@@ -7,28 +7,19 @@ export default function useFolders(){
     const folderRef = useRef<HTMLInputElement>(null);
     const [writer, setWriter] = useState<boolean>(false);
     const [noteViewer, setNoteViewer] = useState<boolean>(false);
-    const [changeFolder, setChangeFolder] = useState<Folders>();
     const [folderNoteView, setFolderNoteView] = useState<Note>();
-    useEffect(()=>{
-        if(folderRef.current){
-        folderRef.current.value = changeFolder.folderName;
-        }
-        // console.log(changeFolder);
-    }, [changeFolder]);
+
     function handleNoteView(value : boolean){
         setNoteViewer(value);
         handleWriter(true);
     }
+    
     function handleFolderNoteView(note : Note){
         handleNoteView(true);
         handleWriter(false);
         setFolderNoteView(note);
     }
-    // function handleFolderNoteView({note, viewValue, writerValue} : { note : Note, viewValue : boolean, writerValue : boolean}){
-    //     handleNoteView(true);
-    //     handleWriter(false);
-    //     setFolderNoteView(note);
-    // }
+    
     function handleToggle(id : string, setter : React.Dispatch<React.SetStateAction<any[]>>){
         setter(prev => {
             console.log(prev);
@@ -41,11 +32,12 @@ export default function useFolders(){
             })
         })
     }
+
     function handleChangeFolder(value : boolean){
-        setChange(true);
+        setChange(value);
     }
     function handleWriter(value : boolean){
         setWriter(value);
     }
-    return {folderRef, handleToggle, folderNoteView, handleFolderNoteView, change, setChange, changeFolder, handleChangeFolder, writer, handleWriter, noteViewer, handleNoteView};
+    return {folderRef, handleToggle, folderNoteView, handleFolderNoteView, change, setChange, handleChangeFolder, writer, handleWriter, noteViewer, handleNoteView};
 }

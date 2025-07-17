@@ -20,8 +20,9 @@ router.post('/', async(req,res)=>{
 
 router.put('/', async(req,res)=>{
     const {_id, folderName, notes} = req.body;
-    const folder = Folder.findByIdAndUpdate(_id,{folderName, notes}, {new : true});
-    await folder.save();
+    console.log(notes);
+    const folder = await Folder.findByIdAndUpdate(_id,{folderName, notes}, {new : true});
+    // await folder.save();
     res.status(200).json(folder);
 })
 

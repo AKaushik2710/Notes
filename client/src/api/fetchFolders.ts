@@ -48,3 +48,22 @@ export const showFolder = createAsyncThunk(
         }
     }
 )
+
+export const changeFolder = createAsyncThunk(
+    'folders/changeFolder',
+    async({folderName, _id, notes} : Folders, thunkAPI)=>{
+        try{
+            const response = await fetch(import.meta.env.VITE_APP_FOLDERS, {
+                method : "PUT",
+                headers : {
+                    "Content-Type" : "application/json"
+                },
+                body : JSON.stringify({folderName, _id, notes})
+            });
+            return await response.json();
+        }
+        catch(err){
+            return thunkAPI.rejectWithValue("Sorry");
+        }
+    }
+)

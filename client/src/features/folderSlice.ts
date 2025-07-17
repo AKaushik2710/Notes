@@ -1,7 +1,7 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 // import Folders from "../pages/folders";
-import type { Note } from "../features/noteSlice";
-import { fetchFolders, addFolders, showFolder } from "../api/fetchFolders";
+import type { Note } from "./notesSlice";
+import { fetchFolders, addFolders, showFolder, changeFolder } from "../api/fetchFolders";
 export interface Folders{
     _id? : string,
     folderName : string,
@@ -40,8 +40,14 @@ const folderSlice = createSlice({
             .addCase(addFolders.fulfilled, (state, action : PayloadAction<Folders>)=>{
                 state.folders.push(action.payload);
             })
-            .addCase(showFolder.fulfilled, (state, action : PayloadAction<Folders>)=>{
+            .addCase(showFolder.fulfilled, (state, action : PayloadAction<populatedFolders>)=>{
                 state.currentFolder = action.payload;
+            })
+            .addCase(changeFolder.fulfilled, (state, action : PayloadAction<Folders>)=>{
+                const index = state.folders.findIndex(folder => folder._id === action.payload._id);
+                if(index !== -1){
+                    state.folders[index] = action.payload;
+                }
             })
     }
 })

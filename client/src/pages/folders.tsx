@@ -5,7 +5,7 @@ import { TempContext } from "../App";
 import type { Note } from "../features/notesSlice";
 import type { Folders } from "../features/folderSlice";
 import {Div, Span, Button, Input} from "../Components/Assembler";
-import { fetchFolders, addFolders, showFolder } from "../api/fetchFolders";
+import { fetchFolders, addFolders, showFolder, changeFolder } from "../api/fetchFolders";
 import useFolders from "../Components/FolderFunctionality";
 import { fetchNotes } from "../api/fetchNotes";
 import FolderNoteWriter from "../Components/FolderNoteWriter";
@@ -21,17 +21,16 @@ export default function Folders() {
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
   const myNotes = useContext(TempContext);
-  const {folderRef, handleToggle, folderNoteView, handleFolderNoteView, change, setChange, changeFolder, handleChangeFolder, writer, handleWriter, noteViewer, handleNoteView}= useFolders();
+  const {folderRef, handleToggle, folderNoteView, handleFolderNoteView, change, setChange, handleChangeFolder, writer, handleWriter, noteViewer, handleNoteView}= useFolders();
   function hanldeSubmission(e : React.FormEvent<HTMLFormElement>){
     e.preventDefault();
     console.log("Submitted");
     if(change){
-      // dispatch()
-      console.log("Changinng");
+      dispatch(changeFolder({_id : currentFolder!._id, folderName : folderRef.current?.value, notes : myNotes.tempNotes?.filter(note => note.checked).map(note => note._id)}));
     }
     else{
       dispatch(addFolders({folderName : folderRef.current?.value, notes : myNotes.tempNotes?.filter(note => note.checked).map(note => note._id)}));
-    }
+    } 
     handleWriter(false);
     myNotes.setTempNotes(myNotes.tempNotes?.map(note => ({...note, checked : false})));
     if(folderRef.current) folderRef.current.value = "";
@@ -51,6 +50,9 @@ export default function Folders() {
   }
 
   function handleChange(folder : Folders){
+    myNotes.setTempNotes(myNotes.tempNotes?.map(note => {
+      return folder.notes?.includes(note._id) ? {...note, checked : true} : note;
+    } ))
     dispatch(showFolder(folder._id? folder._id : ""));
     handleWriter(true);
     handleChangeFolder(true);
@@ -82,7 +84,7 @@ export default function Folders() {
             <hr></hr>
             {!change ? myNotes.tempNotes.map(note => {return <label key={note._id} onClick={()=>handleToggle(note._id, myNotes.setTempNotes)}>{note.heading === "" ? note.message : note.heading}<input type="checkbox"></input></label>}) : currentFolder?.notes?.map((note, index) => {return <Span onClick={()=>handleFolderNoteView(note)} key={index}>{note.heading==="" ? note.message : note.heading}</Span>})}
           </form>)}
-          {noteViewer && <FolderNoteWriter note={folderNoteView} handleNoteView={handleNoteView} />}
+          {noteViewer && <FolderNoteWriter note={folderNoteView} handleNoteView={handleNoteView} handleChange={handleChange} folderID={currentFolder!._id}/>}
         </Div>
   )
 }
