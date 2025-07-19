@@ -67,3 +67,22 @@ export const changeFolder = createAsyncThunk(
         }
     }
 )
+
+export const removeFolder = createAsyncThunk(
+    'folders/removeFolder',
+    async(_id : string, thunkAPI)=>{
+        try{
+            const response = await fetch(import.meta.env.VITE_APP_FOLDERS,{
+                method : "DELETE",
+                headers : {
+                    "Content-Type" : "application/json"
+                },
+                body : JSON.stringify({_id})
+            });
+            return await response.json();
+        }
+        catch(err){
+            return thunkAPI.rejectWithValue("Sorry");
+        }
+    }
+)

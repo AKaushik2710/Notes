@@ -3,19 +3,19 @@ import {Button, Span, Div, Input} from "./Assembler";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useEffect, useRef} from "react";
 import type { Note } from "../features/notesSlice";
+import type { Folders } from "../features/folderSlice";
 import {faCircleCheck} from "@fortawesome/free-solid-svg-icons";
 import { changeNotes } from "../api/fetchNotes";
 import { showFolder } from "../api/fetchFolders";
 
-export default function FolderNoteWriter({note, handleNoteView, handleChange, folderID} : {note :Note, handleNoteView : (value : boolean) => void, handleChange : (folder : string) => void, folderID : string}) {
-    // const {headingRef, messageRef, change, setChange, idRef} = useNotes();
+export default function FolderNoteWriter({note, handleNoteView, handleChange, folderID} : {note :Note | undefined, handleNoteView : (value : boolean) => void, handleChange : (folder : Folders) => void, folderID : string | undefined}) {
     const dispatch = useAppDispatch();
     const headingRef = useRef<HTMLInputElement>(null);
     const messageRef = useRef<HTMLTextAreaElement>(null);
     console.log(note);
     useEffect(()=>{
-        if(headingRef.current)headingRef.current.value = note.heading;
-    if(messageRef.current)messageRef.current.value = note.message;
+        if(headingRef.current)headingRef.current.value = note!.heading;
+    if(messageRef.current)messageRef.current.value = note!.message;
     },[])
     
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -25,8 +25,8 @@ export default function FolderNoteWriter({note, handleNoteView, handleChange, fo
         heading: headingRef.current ? headingRef.current.value : "",
         message: messageRef.current ? messageRef.current.value : ""
     };
-    dispatch(showFolder(folderID));
-    dispatch(changeNotes({_id : note._id, heading : headingRef.current ? headingRef.current.value : "", message : messageRef.current ? messageRef.current.value : ""}));
+    dispatch(showFolder(folderID!));
+    dispatch(changeNotes({_id : note!._id, heading : headingRef.current ? headingRef.current.value : "", message : messageRef.current ? messageRef.current.value : ""}));
     if (headingRef.current) headingRef.current.value = "";
     if (messageRef.current) messageRef.current.value = "";
     handleNoteView(false);

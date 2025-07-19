@@ -1,7 +1,7 @@
 interface InputProps {
     // onChange: (e: React.ChangeEvent<HTMLInputElement>) => void,
     cn : string,
-    ref : React.RefObject<HTMLInputElement>,
+    ref : React.RefObject<HTMLInputElement | null>,
     holder : string
 }
 

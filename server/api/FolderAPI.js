@@ -30,9 +30,19 @@ router.get('/:id', async(req,res)=>{
     const {id} = req.params;
     const folder =  await Folder.findById(id).populate('notes');
     if(!folder){
-        return res.status(404).json({message : "Folder Not Found"});
+        return res.status(404).json({_id : "", folderName : undefined, notes : []});
     }
     res.status(200).json(folder);
     console.log("Folder found", folder);
+})
+
+router.delete('/', async(req,res)=>{
+    const {_id} = req.body;
+    console.log("Delete this", _id);
+    const folder = await Folder.findByIdAndDelete(_id);
+    if(!folder){
+        return res.status(404).json({message : "Folder Not Found"});
+    }
+    res.status(200).json(_id);
 })
 module.exports = router;

@@ -1,10 +1,10 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 // import Folders from "../pages/folders";
 import type { Note } from "./notesSlice";
-import { fetchFolders, addFolders, showFolder, changeFolder } from "../api/fetchFolders";
+import { fetchFolders, addFolders, showFolder, changeFolder, removeFolder } from "../api/fetchFolders";
 export interface Folders{
     _id? : string,
-    folderName : string,
+    folderName : string | undefined,
     notes : string[] | undefined,
 }
 
@@ -48,6 +48,9 @@ const folderSlice = createSlice({
                 if(index !== -1){
                     state.folders[index] = action.payload;
                 }
+            })
+            .addCase(removeFolder.fulfilled, (state, action : PayloadAction<string>)=>{
+                state.folders = state.folders.filter(folder => folder._id !== action.payload);
             })
     }
 })

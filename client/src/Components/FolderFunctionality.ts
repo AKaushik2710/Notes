@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { Folders } from "../features/folderSlice";
 import type { Note } from "../features/notesSlice";
+import type { TempNote } from "../pages/folders";
 
 export default function useFolders(){
     const [change, setChange] = useState<boolean>(false);
@@ -13,17 +14,17 @@ export default function useFolders(){
         setNoteViewer(value);
         handleWriter(true);
     }
-    
+
     function handleFolderNoteView(note : Note){
         handleNoteView(true);
         handleWriter(false);
         setFolderNoteView(note);
     }
     
-    function handleToggle(id : string, setter : React.Dispatch<React.SetStateAction<any[]>>){
+    function handleToggle(id : string | undefined, setter : React.Dispatch<React.SetStateAction<TempNote[] | undefined>>){
         setter(prev => {
             console.log(prev);
-            return prev.map(note => {
+            return prev!.map(note => {
                 console.log(note);
                 if(note._id === id){
                     return {...note, checked : !note.checked};
