@@ -7,7 +7,7 @@ export default function useNotes() {
     const [change, setChange] = useState<boolean>(false);
     const [isMobile, setIsMobile] = useState<boolean>(false);
     const [writer, setWriter] = useState<boolean>(false);
-    const [changedNote, setChangedNote] = useState<Note>();
+    const [changedNote, setChangedNote] = useState<Note>({_id : "", heading : "", message : ""});
     
     useEffect(()=>{
         if (headingRef.current) headingRef.current.value = changedNote!.heading;

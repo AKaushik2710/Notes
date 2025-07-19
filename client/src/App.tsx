@@ -23,6 +23,7 @@ function App() {
   const [tempNotes, setTempNotes] = useState<TempNote[]>();
   function handleTempNoteCreation(){
       const notes = folderNotes.map(note => {return {...note, checked : false}})
+      console.log("I ran");
       setTempNotes(notes);
     }
     function handleCurrentFolder(){

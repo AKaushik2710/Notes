@@ -1,14 +1,13 @@
-import { useAppDispatch, useAppSelector } from "../redux/hook";
-import {Button, Span, Div, Input} from "./Assembler";
+import { useAppDispatch } from "../redux/hook";
+import {Button, Div, Input} from "./Assembler";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {useEffect, useRef} from "react";
 import type { Note } from "../features/notesSlice";
-import type { Folders } from "../features/folderSlice";
 import {faCircleCheck} from "@fortawesome/free-solid-svg-icons";
 import { changeNotes } from "../api/fetchNotes";
 import { showFolder } from "../api/fetchFolders";
 
-export default function FolderNoteWriter({note, handleNoteView, handleChange, folderID} : {note :Note | undefined, handleNoteView : (value : boolean) => void, handleChange : (folder : Folders) => void, folderID : string | undefined}) {
+export default function FolderNoteWriter({note, handleNoteView, folderID} : {note :Note | undefined, handleNoteView : (value : boolean) => void, folderID : string | undefined}) {
     const dispatch = useAppDispatch();
     const headingRef = useRef<HTMLInputElement>(null);
     const messageRef = useRef<HTMLTextAreaElement>(null);
@@ -21,10 +20,6 @@ export default function FolderNoteWriter({note, handleNoteView, handleChange, fo
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     
-    const newNote = {
-        heading: headingRef.current ? headingRef.current.value : "",
-        message: messageRef.current ? messageRef.current.value : ""
-    };
     dispatch(showFolder(folderID!));
     dispatch(changeNotes({_id : note!._id, heading : headingRef.current ? headingRef.current.value : "", message : messageRef.current ? messageRef.current.value : ""}));
     if (headingRef.current) headingRef.current.value = "";

@@ -1,5 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import type { Folders } from "../features/folderSlice";
+import { useRef, useState } from "react";
 import type { Note } from "../features/notesSlice";
 import type { TempNote } from "../pages/folders";
 
@@ -25,13 +24,14 @@ export default function useFolders(){
         setter(prev => {
             console.log(prev);
             return prev!.map(note => {
-                console.log(note);
+                // console.log(note);
                 if(note._id === id){
                     return {...note, checked : !note.checked};
                 }
                 return note;
             })
         })
+        setter(prev => {console.log(prev);return prev})
     }
 
     function handleChangeFolder(value : boolean){
