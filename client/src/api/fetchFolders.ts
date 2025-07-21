@@ -1,6 +1,7 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import type { Folders } from "../features/folderSlice";
 
+// Async thunk to fetch all folders
 export const fetchFolders = createAsyncThunk(
     'folders/fetchNotes',
     async(_, thunkAPI)=>{
@@ -15,9 +16,10 @@ export const fetchFolders = createAsyncThunk(
     }
 )
 
+// Async thunk to add a new folder
 export const addFolders = createAsyncThunk(
     'folders/addFolder',
-    async({folderName, notes} : Folders, thunkAPI)=>{
+    async({folderName="", notes} : Folders, thunkAPI)=>{
         try{
             const response = await fetch(import.meta.env.VITE_APP_FOLDERS, {
                 method : "POST",
@@ -35,6 +37,7 @@ export const addFolders = createAsyncThunk(
     }
 )
 
+// Async thunk to show a specific folder
 export const showFolder = createAsyncThunk(
     'folders/showFolder',
     async(id : string, thunkAPI)=>{
@@ -49,6 +52,7 @@ export const showFolder = createAsyncThunk(
     }
 )
 
+// Async thunk to change an existing folder
 export const changeFolder = createAsyncThunk(
     'folders/changeFolder',
     async({folderName, _id, notes} : Folders, thunkAPI)=>{
@@ -68,6 +72,7 @@ export const changeFolder = createAsyncThunk(
     }
 )
 
+// Async thunk to remove a folder
 export const removeFolder = createAsyncThunk(
     'folders/removeFolder',
     async(_id : string, thunkAPI)=>{

@@ -1,8 +1,10 @@
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import type { Note } from "../features/notesSlice";
+
+// Async thunk to add a new note
 export const addNotes =  createAsyncThunk(
     'notes/addNotes',
-    async ({ heading, message} : Note, thunkAPI) =>{
+    async ({ heading="", message=""} : Note, thunkAPI) =>{
         try {
             const response = await fetch( import.meta.env.VITE_API_URL, {
                 method : "POST",
@@ -19,6 +21,7 @@ export const addNotes =  createAsyncThunk(
     }
 )
 
+// Async thunk to fetch all notes
 export const fetchNotes = createAsyncThunk(
     'notes/fetchNotes',
     async (_, thunkAPI) =>{
@@ -33,6 +36,7 @@ export const fetchNotes = createAsyncThunk(
     }
 )
 
+// Async thunk to change an existing note
 export const changeNotes = createAsyncThunk(
     'notes/changeNotes',
     async({_id, heading, message} : Note, thunnkAPI)=>{
@@ -54,6 +58,7 @@ export const changeNotes = createAsyncThunk(
     }
 )
 
+// Async thunk to delete a note
 export const deleteNotes = createAsyncThunk(
     "notes/deleteNotes",
     async({_id} : {_id : string}, thunkAPI)=>{

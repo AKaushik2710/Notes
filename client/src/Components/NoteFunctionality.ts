@@ -9,11 +9,14 @@ export default function useNotes() {
     const [writer, setWriter] = useState<boolean>(false);
     const [changedNote, setChangedNote] = useState<Note>({_id : "", heading : "", message : ""});
     
+    // Handles the assignment of values to refs when a note is viewed or edited
     useEffect(()=>{
         if (headingRef.current) headingRef.current.value = changedNote!.heading;
         if (messageRef.current) messageRef.current.value = changedNote!.message;
         idRef.current = changedNote!._id
     },[changedNote])
+
+    // Handles changes in the note
     function handleChange({ _id, heading, message }: Note) {
         if(window.innerWidth <= 500){
             setIsMobile(true);

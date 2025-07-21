@@ -1,8 +1,8 @@
 import { useAppDispatch, useAppSelector } from "../redux/hook";
 import Writer from "../Components/Writer";
-import { fetchNotes, deleteNotes } from "../api/fetchNotes";
+import {  deleteNotes, fetchNotes } from "../api/fetchNotes";
 import { useEffect } from "react";
-import {Div, Span, Button} from "../Components/Assembler";
+import {Div, Span} from "../Components/Assembler";
 import useNotes from "../Components/NoteFunctionality";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenNib, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -11,40 +11,39 @@ import { faPenNib, faTrash } from "@fortawesome/free-solid-svg-icons";
 
 export default function Notes() {
   const notes = useAppSelector((state) => state.notes);
-  const currentFolder = useAppSelector((state) => state.folders.currentFolder);
   const dispatch = useAppDispatch();
   const {headingRef, messageRef, change, setChange, idRef, handleChange, writer, setWriter, isMobile, setIsMobile}  = useNotes();
-  useEffect(()=>{
-        dispatch(fetchNotes());
-    },[])
-    useEffect(()=>{
-      console.log("Current Folder:", currentFolder);
-    },[]);
-useEffect(() => {
-  function handleResize() {
-    if (window.innerWidth <= 500) {
-      setIsMobile(isMobile);
-    } else {
-      setIsMobile(false);
-    }
-  }
-  // Set initial value
-  handleResize();
-  // Listen for resize
-  window.addEventListener("resize", handleResize);
-  // Cleanup
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
-function handleDeletion(_id:string){
-  dispatch(deleteNotes({_id}))
-}
-  return (
 
+  useEffect(()=>{
+    dispatch(fetchNotes());
+  },[notes]);
+  // Handles Mobile View
+  useEffect(() => {
+    function handleResize() {
+      if (window.innerWidth <= 500) {
+        setIsMobile(isMobile);
+      } else {
+        setIsMobile(false);
+      }
+    }
+    // Set initial value
+    handleResize();
+    // Listen for resize
+    window.addEventListener("resize", handleResize);
+    // Cleanup
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Handles note deletion
+  function handleDeletion(_id:string){
+    dispatch(deleteNotes({_id}))
+  }
+  return (
         <Div cn=" flex w-full h-full overflow-hidden bg-[#424874] text-[#CACFD6]">
           {!isMobile && (<Div cn='md:w-2/5 w-full border-1 h-full cav'>
             <Div cn="flex w-full justify-between items-center h-1/7">
               <Span cn="md:text-2xl text-xl ml-10 paci font-extrabold">Notes</Span>
-              <Span cn="text-xl mr-6 cursor-pointer"  onClick={() => setWriter(true)}>
+              <Span cn="text-xl mr-6 cursor-pointer hover:text-[#DCD6F7]"  onClick={() => setWriter(true)}>
                 <FontAwesomeIcon icon={faPenNib}></FontAwesomeIcon>
               </Span>
             </Div>

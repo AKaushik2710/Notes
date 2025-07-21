@@ -1,12 +1,15 @@
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 import { addNotes, fetchNotes, changeNotes, deleteNotes } from "../api/fetchNotes";
 
+// Note Interface
 export interface Note {
     _id? : string,
     heading : string,
-    message : string
+    message : string,
+    checked? : boolean
 }
 
+// Initial state for notes
 const initialState : Note[]= [];
 
 const notesSlice = createSlice(
@@ -14,30 +17,45 @@ const notesSlice = createSlice(
         name : "notes",
         initialState,
         reducers : {
-            addNote : (state,  action : PayloadAction<Note>) => {
-                state.push(action.payload);
+            // Action to change the note check state
+            changeNoteCheck : (state, action : PayloadAction<{_id : string | undefined}>)=>{
+                return state.map(note =>{
+                    if(note._id === action.payload._id){
+                        return {...note, checked : !note.checked};
+                    }
+                    return note;
+                })
             },
-            removeNote : (state, action : PayloadAction<string>) => {
-                return state.filter(note => note._id !== action.payload)
+            // Action to change the check state of all notes
+            changeAllNoteCheck : (state)=>{
+                return state.map(note =>{
+                    return {...note, checked : false};
+                })
             }
         },
         extraReducers : (builder) =>{
             builder
+            // Handling fulfilled state of addNotes action
             .addCase(addNotes.fulfilled, (state, action: PayloadAction<Note>) => {
-                state.push(action.payload);
+                state.push({...action.payload, checked : false});
             })
-            .addCase(addNotes.rejected, (state, action) => {
-                console.error("Failed to add note:", action.payload);
+            // Handling rejected state of addNotes action
+            .addCase(addNotes.rejected, () => {
+                console.error("Failed to add note:");
             })
-            .addCase(fetchNotes.fulfilled, (state, action: PayloadAction<Note[]>) => {
-                return action.payload;
+            // Handling fulfilled state of fetchNotes action
+            .addCase(fetchNotes.fulfilled, (state,  action: PayloadAction<Note[]>) => {
+                state = action.payload.map(note => ({...note, checked : false}));
+                return state;
             })
+            // Handling fulfilled state of changeNotes action
             .addCase(changeNotes.fulfilled, (state, action : PayloadAction<Note>) => {
                 const index = state.findIndex(note => note._id === action.payload._id);
                 if (index !== -1) {
-                    state[index] = action.payload;
+                    state[index] = {...state[index], ...action.payload};
                 }
             })
+            // Handling fulfilled state of deletNotes action
             .addCase(deleteNotes.fulfilled,(state, action)=>{
                 return state.filter(note => note._id!== action.payload);
             })
@@ -45,5 +63,6 @@ const notesSlice = createSlice(
     }
 )
 
-export const {addNote, removeNote} = notesSlice.actions;
+// Exporting actions and reducer
+export const {changeAllNoteCheck, changeNoteCheck} = notesSlice.actions;
 export default  notesSlice.reducer;

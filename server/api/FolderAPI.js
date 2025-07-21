@@ -11,6 +11,9 @@ router.get('/', async(req,res)=>{
 // For Adding a New Folder
 router.post('/', async(req,res)=>{
     const {folderName, notes} = req.body;
+    if(folderName === undefined && notes === undefined){
+        res.status(400).json({message: "Data not entered"});
+    }
     console.log(folderName, notes);
     const folder = new Folder({ folderName : folderName, notes : notes});
     const save =  await folder.save();
@@ -18,6 +21,7 @@ router.post('/', async(req,res)=>{
     console.log("Done", folder, notes);
 })
 
+// For Changing a Folder
 router.put('/', async(req,res)=>{
     const {_id, folderName, notes} = req.body;
     console.log(notes);
@@ -26,6 +30,7 @@ router.put('/', async(req,res)=>{
     res.status(200).json(folder);
 })
 
+// For Getting a Folder by ID
 router.get('/:id', async(req,res)=>{
     const {id} = req.params;
     const folder =  await Folder.findById(id).populate('notes');
@@ -36,6 +41,7 @@ router.get('/:id', async(req,res)=>{
     console.log("Folder found", folder);
 })
 
+// For Deleting a Folder
 router.delete('/', async(req,res)=>{
     const {_id} = req.body;
     console.log("Delete this", _id);

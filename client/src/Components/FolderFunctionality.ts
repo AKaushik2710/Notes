@@ -1,44 +1,36 @@
 import { useRef, useState } from "react";
 import type { Note } from "../features/notesSlice";
-import type { TempNote } from "../pages/folders";
+import { useAppDispatch } from "../redux/hook";
 
 export default function useFolders(){
     const [change, setChange] = useState<boolean>(false);
     const folderRef = useRef<HTMLInputElement>(null);
     const [writer, setWriter] = useState<boolean>(false);
+    const dispatch = useAppDispatch();
     const [noteViewer, setNoteViewer] = useState<boolean>(false);
     const [folderNoteView, setFolderNoteView] = useState<Note>();
 
+    // Handles Note info that is going to be viewed or changed
     function handleNoteView(value : boolean){
         setNoteViewer(value);
         handleWriter(true);
     }
 
+    // Handles Viewing/Changing of Folder's Notes
     function handleFolderNoteView(note : Note){
         handleNoteView(true);
         handleWriter(false);
         setFolderNoteView(note);
     }
     
-    function handleToggle(id : string | undefined, setter : React.Dispatch<React.SetStateAction<TempNote[] | undefined>>){
-        setter(prev => {
-            console.log(prev);
-            return prev!.map(note => {
-                // console.log(note);
-                if(note._id === id){
-                    return {...note, checked : !note.checked};
-                }
-                return note;
-            })
-        })
-        setter(prev => {console.log(prev);return prev})
-    }
-
+    // Ḥandles Folder changing 
     function handleChangeFolder(value : boolean){
         setChange(value);
     }
+
+    // Handles Folder Writing 
     function handleWriter(value : boolean){
         setWriter(value);
     }
-    return {folderRef, handleToggle, folderNoteView, handleFolderNoteView, change, setChange, handleChangeFolder, writer, handleWriter, noteViewer, handleNoteView};
+    return {folderRef, folderNoteView, handleFolderNoteView, change, setChange, handleChangeFolder, writer, handleWriter, noteViewer, handleNoteView};
 }

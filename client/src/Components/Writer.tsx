@@ -1,4 +1,4 @@
-import {Button, Span, Div, Input} from "./Assembler";
+import {Button, Div, Input} from "./Assembler";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faCircleCheck} from "@fortawesome/free-solid-svg-icons";
 import { addNotes, changeNotes } from "../api/fetchNotes";
