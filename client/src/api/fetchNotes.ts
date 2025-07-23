@@ -6,6 +6,7 @@ export const addNotes =  createAsyncThunk(
     'notes/addNotes',
     async ({ heading="", message=""} : Note, thunkAPI) =>{
         try {
+            if(heading === "" && message === "") return thunkAPI.rejectWithValue("No Data Provided");
             const response = await fetch( import.meta.env.VITE_API_URL, {
                 method : "POST",
                 headers: {

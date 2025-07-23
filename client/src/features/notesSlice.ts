@@ -19,12 +19,17 @@ const notesSlice = createSlice(
         reducers : {
             // Action to change the note check state
             changeNoteCheck : (state, action : PayloadAction<{_id : string | undefined}>)=>{
+                console.log(action.payload._id);
+                try{
                 return state.map(note =>{
                     if(note._id === action.payload._id){
                         return {...note, checked : !note.checked};
                     }
                     return note;
-                })
+                })}
+                catch(err){
+                    console.error(err)
+                }
             },
             // Action to change the check state of all notes
             changeAllNoteCheck : (state)=>{
@@ -40,8 +45,8 @@ const notesSlice = createSlice(
                 state.push({...action.payload, checked : false});
             })
             // Handling rejected state of addNotes action
-            .addCase(addNotes.rejected, () => {
-                console.error("Failed to add note:");
+            .addCase(addNotes.rejected, (err) => {
+                console.error("Failed to add note:", err);
             })
             // Handling fulfilled state of fetchNotes action
             .addCase(fetchNotes.fulfilled, (state,  action: PayloadAction<Note[]>) => {

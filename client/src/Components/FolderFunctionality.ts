@@ -7,6 +7,7 @@ export default function useFolders(){
     const folderRef = useRef<HTMLInputElement>(null);
     const [writer, setWriter] = useState<boolean>(false);
     const dispatch = useAppDispatch();
+    const [noteAdd, setNoteAdd] = useState<boolean>(false);
     const [noteViewer, setNoteViewer] = useState<boolean>(false);
     const [folderNoteView, setFolderNoteView] = useState<Note>();
 
@@ -32,5 +33,9 @@ export default function useFolders(){
     function handleWriter(value : boolean){
         setWriter(value);
     }
-    return {folderRef, folderNoteView, handleFolderNoteView, change, setChange, handleChangeFolder, writer, handleWriter, noteViewer, handleNoteView};
+
+    function handleNoteAdd(value : boolean){
+        setNoteAdd(value);
+    }
+    return {folderRef, folderNoteView, handleFolderNoteView, change, setChange, handleChangeFolder, writer, handleWriter, noteViewer, handleNoteView, noteAdd, handleNoteAdd};
 }

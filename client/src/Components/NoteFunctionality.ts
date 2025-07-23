@@ -24,6 +24,6 @@ export default function useNotes() {
         setChange(true);
         setChangedNote({_id: _id, heading:heading, message:message})
     }
-
+    
     return { headingRef, messageRef, idRef, handleChange, change, setChange, writer, setWriter, isMobile, setIsMobile };
 }

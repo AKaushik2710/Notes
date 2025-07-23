@@ -14,7 +14,7 @@ export interface Folders{
 interface populatedFolders {
     _id? : string,
     folderName : string,
-    notes : Note[] | undefined
+    notes : string[] | undefined
 }
 
 // State interface for folders

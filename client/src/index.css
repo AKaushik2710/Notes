@@ -10,3 +10,15 @@
   font-optical-sizing: auto;
   font-style: normal;
 }
+
+.scrollbar::-webkit-scrollbar, .scrollbar-name::-webkit-scrollbar{
+  width: 8px;
+}
+
+.scrollbar-name::-webkit-scrollbar-thumb{
+  background-color: #424874;
+}
+
+.scrollbar::-webkit-scrollbar-thumb{
+  background-color: #CACFD6;
+}

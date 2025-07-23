@@ -21,18 +21,21 @@ export const addFolders = createAsyncThunk(
     'folders/addFolder',
     async({folderName="", notes} : Folders, thunkAPI)=>{
         try{
-            const response = await fetch(import.meta.env.VITE_APP_FOLDERS, {
-                method : "POST",
-                headers : {
-                    "Content-Type" : "application/json"
-                },
-                body : JSON.stringify({folderName, notes})
-            });
-            const data = await response.json();
-            return data;
+            if(!folderName && notes?.length === 0) return thunkAPI.rejectWithValue("No Data Provided");
+            else{
+                const response = await fetch(import.meta.env.VITE_APP_FOLDERS, {
+                    method : "POST",
+                    headers : {
+                        "Content-Type" : "application/json"
+                    },
+                    body : JSON.stringify({folderName, notes})
+                });
+                const data = await response.json();
+                return data;
+            }
         }
         catch(err){
-            return thunkAPI.rejectWithValue("Sprry");
+            return thunkAPI.rejectWithValue("Sorry");
         }
     }
 )
@@ -57,6 +60,7 @@ export const changeFolder = createAsyncThunk(
     'folders/changeFolder',
     async({folderName, _id, notes} : Folders, thunkAPI)=>{
         try{
+            console.log(folderName, _id, notes);
             const response = await fetch(import.meta.env.VITE_APP_FOLDERS, {
                 method : "PUT",
                 headers : {
