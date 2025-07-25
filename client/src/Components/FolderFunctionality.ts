@@ -9,6 +9,7 @@ export default function useFolders(){
     const [noteAdd, setNoteAdd] = useState<boolean>(false);
     const [noteViewer, setNoteViewer] = useState<boolean>(false);
     const [folderNoteView, setFolderNoteView] = useState<Note>();
+    const [windowWidth, setWindoWidth] = useState<number>(window.innerWidth);
 
     // Handles Note info that is going to be viewed or changed
     function handleNoteView(value : boolean){
@@ -40,5 +41,5 @@ export default function useFolders(){
     function handleRemoveUI(value : boolean){
         setNoteRemove(value);
     }
-    return {folderRef, folderNoteView, handleFolderNoteView, change, setChange, handleChangeFolder, writer, handleWriter, noteViewer, handleNoteView, noteAdd, handleNoteAdd, noteRemove, handleRemoveUI};
+    return {folderRef, folderNoteView, handleFolderNoteView, change, setChange, handleChangeFolder, writer, handleWriter, noteViewer, handleNoteView, noteAdd, handleNoteAdd, noteRemove, handleRemoveUI, windowWidth, setWindoWidth};
 }

@@ -4,21 +4,21 @@ import {faCircleCheck, faArrowLeft} from "@fortawesome/free-solid-svg-icons";
 import { addNotes, changeNotes } from "../api/fetchNotes";
 import { useAppDispatch} from "../redux/hook";
 
-export default function Writer({headingRef, messageRef, change, setChange, idRef, setWriter, setIsMobile} : {
+export default function Writer({headingRef, messageRef, change, setChange, idRef, setWriter, handleMobile} : {
     headingRef: React.RefObject<HTMLInputElement | null >,
     messageRef: React.RefObject<HTMLTextAreaElement | null >,
     change: boolean,
     setChange: React.Dispatch<React.SetStateAction<boolean>>,
     idRef: React.RefObject<string | undefined>,
     setWriter : React.Dispatch<React.SetStateAction<boolean>>,
-    setIsMobile : React.Dispatch<React.SetStateAction<boolean>>
+    handleMobile : (value : boolean)=> void
 }) {
     // const {headingRef, messageRef, change, setChange, idRef} = useNotes();
     const dispatch = useAppDispatch();
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setWriter(false);
-    setIsMobile(false);
+    handleMobile(false);
     const newNote = {
         heading: headingRef.current ? headingRef.current.value : "",
         message: messageRef.current ? messageRef.current.value : ""
@@ -35,6 +35,8 @@ export default function Writer({headingRef, messageRef, change, setChange, idRef
 }
 
 function handleClose(){
+    handleMobile(false);
+    setChange(false);
     setWriter(false);
 }
     return <form className="flex flex-col w-full md:w-3/5 border-1 border-teal-200 h-full relative" onSubmit={handleSubmit}>

@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import type { Note } from "../features/notesSlice";
+
+interface Change extends Note{
+    handleMobile : (value : boolean)=> void
+}
 export default function useNotes() {
     const headingRef = useRef<HTMLInputElement | null>(null);
     const messageRef = useRef<HTMLTextAreaElement | null>(null);
     const idRef = useRef<string | undefined>(""); // To store the ID of the note being edited
     const [change, setChange] = useState<boolean>(false);
-    const [isMobile, setIsMobile] = useState<boolean>(false);
+    const [windowWidth, setWindoWidth] = useState<number>(window.innerWidth);
     const [writer, setWriter] = useState<boolean>(false);
     const [changedNote, setChangedNote] = useState<Note>({_id : "", heading : "", message : ""});
     
@@ -17,13 +21,14 @@ export default function useNotes() {
     },[changedNote])
 
     // Handles changes in the note
-    function handleChange({ _id, heading, message }: Note) {
+    function handleChange({ _id, heading, message, handleMobile }: Change) {
         if(window.innerWidth <= 500){
-            setIsMobile(true);
+            handleMobile(true);
         }
         setChange(true);
         setChangedNote({_id: _id, heading:heading, message:message})
     }
     
-    return { headingRef, messageRef, idRef, handleChange, change, setChange, writer, setWriter, isMobile, setIsMobile };
+
+    return { headingRef, messageRef, idRef, handleChange, change, setChange, writer, setWriter, windowWidth, setWindoWidth };
 }
