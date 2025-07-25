@@ -18,7 +18,7 @@ const notesSlice = createSlice(
         initialState,
         reducers : {
             // Action to change the note check state
-            changeNoteCheck : (state, action : PayloadAction<{_id : string | undefined}>)=>{
+            changeNoteCheck : (state, action : PayloadAction<{_id : string | undefined | Note}>)=>{
                 console.log(action.payload._id);
                 try{
                 return state.map(note =>{

@@ -1,12 +1,11 @@
 import { useRef, useState } from "react";
 import type { Note } from "../features/notesSlice";
-import { useAppDispatch } from "../redux/hook";
 
 export default function useFolders(){
     const [change, setChange] = useState<boolean>(false);
     const folderRef = useRef<HTMLInputElement>(null);
     const [writer, setWriter] = useState<boolean>(false);
-    const dispatch = useAppDispatch();
+    const [noteRemove, setNoteRemove] = useState<boolean>(false);
     const [noteAdd, setNoteAdd] = useState<boolean>(false);
     const [noteViewer, setNoteViewer] = useState<boolean>(false);
     const [folderNoteView, setFolderNoteView] = useState<Note>();
@@ -37,5 +36,9 @@ export default function useFolders(){
     function handleNoteAdd(value : boolean){
         setNoteAdd(value);
     }
-    return {folderRef, folderNoteView, handleFolderNoteView, change, setChange, handleChangeFolder, writer, handleWriter, noteViewer, handleNoteView, noteAdd, handleNoteAdd};
+
+    function handleRemoveUI(value : boolean){
+        setNoteRemove(value);
+    }
+    return {folderRef, folderNoteView, handleFolderNoteView, change, setChange, handleChangeFolder, writer, handleWriter, noteViewer, handleNoteView, noteAdd, handleNoteAdd, noteRemove, handleRemoveUI};
 }

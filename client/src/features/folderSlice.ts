@@ -7,14 +7,14 @@ import { fetchFolders, addFolders, showFolder, changeFolder, removeFolder } from
 export interface Folders{
     _id? : string,
     folderName : string | undefined,
-    notes : string[] | undefined,
+    notes : string[] | undefined | Note[],
 }
 
 // Populated Folders Interface
 interface populatedFolders {
     _id? : string,
     folderName : string,
-    notes : string[] | undefined
+    notes : Note[] | undefined
 }
 
 // State interface for folders

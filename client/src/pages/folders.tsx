@@ -1,7 +1,7 @@
 import { useAppDispatch, useAppSelector } from "../redux/hook";
 import { useEffect} from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faTrash, faCircleCheck, faFolderPlus, faFolderOpen, faArrowLeft, faPlus, faCross, faX } from "@fortawesome/free-solid-svg-icons";
+import { faTrash, faCircleCheck, faFolderPlus, faFolderOpen, faArrowLeft, faPlus, faX } from "@fortawesome/free-solid-svg-icons";
 import type { Note } from "../features/notesSlice";
 import type { Folders } from "../features/folderSlice";
 import {Div, Span, Button, Input} from "../Components/Assembler";
@@ -19,7 +19,7 @@ export default function Folders() {
   const folderNotes = useAppSelector((state) => state.notes);
   const myNotes = folderNotes;
   const dispatch = useAppDispatch();
-  const {folderRef, folderNoteView, handleFolderNoteView, change, handleChangeFolder, writer, handleWriter, noteViewer, handleNoteView, noteAdd, handleNoteAdd}= useFolders();
+  const {folderRef, folderNoteView, handleFolderNoteView, change, handleChangeFolder, writer, handleWriter, noteViewer, handleNoteView, noteAdd, handleNoteAdd, noteRemove, handleRemoveUI}= useFolders();
   
   // Fetching folders when component mounts
   useEffect(()=>{
@@ -36,12 +36,28 @@ export default function Folders() {
     if(currentFolder?.folderName !== undefined){
       folderRef.current!.value = currentFolder.folderName;
     }
-  },[currentFolder])
+    console.log(currentFolder, typeof currentFolder?.notes);
+  },[currentFolder?.notes])
+
+  // For updation of UI when a note is added
+  useEffect(()=>{
+      dispatch(showFolder(currentFolder?._id ? currentFolder._id : ""));
+  },[noteAdd]);
+
+  // Handle the updation of UI after a note is removed
+  useEffect(()=>{
+    if(noteRemove){
+      dispatch(showFolder(currentFolder?._id ? currentFolder._id : ""));
+      handleRemoveUI(false);
+    };
+  },[noteRemove]);
 
   // Handling form submission
   function handleSubmission(e : React.FormEvent<HTMLFormElement>){
     e.preventDefault();
     const checkedNotes = folderNotes.filter(note => note.checked).map(note => note._id);
+    
+    // For handling the submission in case a change is  being made in notes or foldername
     if(change || noteAdd){
       dispatch(changeFolder({
         _id : currentFolder!._id,
@@ -49,13 +65,22 @@ export default function Folders() {
         notes : checkedNotes?.filter((id): id is string => typeof id === "string")
       }));
     }
+    // The submission for a newly created folder
     else{
       dispatch(addFolders({folderName : folderRef.current?.value, notes : checkedNotes as string[]}));
-    } 
-    dispatch(showFolder(""));
+    }
+    // For triggering the updation of UI
+    if(noteAdd){
+      handleNoteAdd(false);
+      handleChangeFolder(true);
+    }
+    // For removal of currentFolder after change and resetting all notes to their false checked state
+    else{
+      dispatch(showFolder(""));
     handleWriter(false);
       dispatch(changeAllNoteCheck());
     if(folderRef.current) folderRef.current.value = "";
+    }
   }
   
   // Handling folder removal
@@ -87,22 +112,28 @@ export default function Folders() {
     };
   }
 
-  function handleNoteRemoval(e : React.MouseEvent<SVGSVGElement>, noteID? : string){
+  // Handling removal of notes during change
+  function handleNoteRemoval(e : React.MouseEvent<SVGSVGElement>){
     e.stopPropagation();
     const noteId = e.currentTarget.parentElement?.id;
     console.log(noteId, typeof noteId);
     currentFolder?.notes?.forEach(note => console.log(typeof note, note));
-    // console.log(currentFolder?.notes?.filter(note => note == noteId));
     dispatch(changeFolder({
       _id : currentFolder!._id,
       folderName : currentFolder!.folderName,
       notes : currentFolder!.notes!.filter(note => note._id !== noteId)
     }));
+    dispatch(changeNoteCheck({_id : noteId}));
+    handleRemoveUI(true); 
   }
+
+  // For handling the addition of new notes
   function handleAddNote(){
     handleNoteAdd(true);
-        handleChangeFolder(false);
+    handleChangeFolder(false);
   }
+
+  // For the closing of changing of folder
   function handleClose(){
     dispatch(showFolder(""));
     handleWriter(false);
