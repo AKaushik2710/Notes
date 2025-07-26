@@ -23,13 +23,12 @@ function App() {
     dispatch(showFolder(""));
   }
 
-  useEffect(()=>{
-    console.log(mob);
-  },[mob])
+  // useEffect(()=>{
+  //   console.log(mob);
+  // },[mob])
   
   const handleMob = (value : boolean)=>{
     setMob(value);
-    console.log(mob);
   }
   const handleMobile = (value : boolean)=>{
     setIsMobile(value);
@@ -41,14 +40,29 @@ function App() {
           <Button cn="hover:shadow-lg hover:shadow-white" onClick={()=>{navigate('/folders'); }}><FontAwesomeIcon icon={faFolder}></FontAwesomeIcon></Button>
           {/* <Button cn="hover:shadow-lg hover:shadow-white">Settings</Button> */}
         </Div>
-        {mob && <Div cn="w-20 z-20 absolute h-full bg-[#424874] border-1 grid">
-                  {/* <Div cn="absolute top-5 left-3 text-[#D6E5E3] md:hidden text-center border-1 border-black">
-                  <FontAwesomeIcon icon={faBars} onClick={()=> handleMob(false)}></FontAwesomeIcon>
-                  </Div> */}
-                  <Button cn="hover:shadow-lg hover:shadow-white text-xs paci" onClick={()=> { handleCurrentFolder();navigate('/notes'); handleMob(false)}}><FontAwesomeIcon icon={faFilePen}></FontAwesomeIcon> Notes</Button>
-                  <Button cn="hover:shadow-lg hover:shadow-white text-xs paci" onClick={()=>{navigate('/folders'); handleMob(false) }}><FontAwesomeIcon icon={faFolder}></FontAwesomeIcon> Folders</Button>
-        </Div>}
-        <Div cn='w-full border-1 border-teal-200 h-full' onClick={(e)=> {console.log("Clicked parent");handleMob(false)}}>
+        {mob && (
+          <Div cn="fixed inset-0 z-50 bg-black/30" onClick={() => handleMob(false)} >
+            <Div cn="w-20 h-full bg-[#424874] border-1 grid" onClick={(e) => e.stopPropagation()}>
+              <Button cn="hover:shadow-lg hover:shadow-white text-xs paci"
+              onClick={() => {
+                handleCurrentFolder();
+                navigate("/notes");
+                handleMob(false);
+              }}>
+                <FontAwesomeIcon icon={faFilePen} /> Notes
+              </Button>
+              <Button cn="hover:shadow-lg hover:shadow-white text-xs paci"
+                onClick={() => {
+                  navigate("/folders");
+                  handleMob(false);
+                }}>
+                <FontAwesomeIcon icon={faFolder} /> Folders
+              </Button>
+            </Div>
+          </Div>
+        )}
+
+        <Div cn='w-full border-1 border-teal-200 h-full'>
           <barContext.Provider value={{ myfunction: handleMob, isMobile : isMobile, myMobileFunction :  handleMobile}}>
             <Outlet />
           </barContext.Provider>

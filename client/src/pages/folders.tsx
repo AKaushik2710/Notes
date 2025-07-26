@@ -151,7 +151,7 @@ export default function Folders() {
     handleChangeFolder(false);
   }
 
-  console.log("Mobile view has the value", myContext?.isMobile)
+  // console.log("Mobile view has the value", myContext?.isMobile)
   // For the closing of changing of folder
   function handleClose(){
     dispatch(changeAllNoteCheck());
@@ -160,15 +160,15 @@ export default function Folders() {
     handleWriter(false);
   }
   return (
-        <Div cn=" flex w-full h-full cav bg-[#424874] text-[#CACFD6]" onClick={()=>myContext?.myfunction(false)}>
+        <Div cn=" flex w-full h-full cav bg-[#424874] text-[#CACFD6]">
           {!myContext?.isMobile && <Div cn='w-full md:w-2/5 border-1 h-full'>
             <Div cn="flex w-full justify-start items-center md:h-1/7 h-1/10">
               <Div cn=" text-xl left-1 text-[#D6E5E3] md:hidden text-center w-10">
-                <FontAwesomeIcon icon={faBars} onClick={()=> myContext?.myfunction(true)}></FontAwesomeIcon>
+                <FontAwesomeIcon icon={faBars} onClick={(e)=> {e.stopPropagation();myContext?.myfunction(true)}}></FontAwesomeIcon>
               </Div>
               <Div cn="flex w-90 justify-between items-center h-full">
                 <Span cn="md:text-2xl font-extrabold text-xl paci ml-10 select-none">Folders</Span>
-              <Span cn="text-xl cursor-pointer mr-6 hover:text-[#DCD6F7]" onClick={()=>{handleChange(undefined); myContext?.myMobileFunction(true) }}>
+              <Span cn="text-xl cursor-pointer mr-6 hover:text-[#DCD6F7]" onClick={(e)=>{e.stopPropagation();handleChange(undefined); myContext?.myMobileFunction(true) }}>
                 <FontAwesomeIcon icon={faFolderPlus}></FontAwesomeIcon>
               </Span>
               </Div>

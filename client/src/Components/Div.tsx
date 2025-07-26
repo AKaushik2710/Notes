@@ -5,9 +5,9 @@ interface DivProps {
 }
 
 export default function Div( props : DivProps ) {
-    const { children, cn } = props;
+    const { children, cn, onClick } = props;
     return (
-        <div className={cn}>
+        <div className={cn} onClick={onClick}>
             {children}
         </div>
     );
